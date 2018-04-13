@@ -80,8 +80,8 @@ def new_lookup(u_input):
             print("{0}: {1}".format(info[0], info[1]))
 
 if __name__ == "__main__":
-	print("Made by Yuki")
-	print("Version 1.0.2")
+    print("Made by Yuki")
+    print("Version 1.0.2")
     command = input("Search for Name or ID of Pokemon ('Q' to quit): ").lower()
     print("------------------\n")
     while command != 'Q':
