@@ -5,6 +5,7 @@
 
 import json
 import requests
+import sys
 
 DATABASE_URL = "http://pokeapi.co/api/v2"
 STATS_FORMAT = {"hp": "HP", "attack": "Attack", "special-attack": "Sp. Attack",
@@ -13,10 +14,7 @@ BASIC_INFO = {"Name": "name", "ID": "id", "Weight": "weight", "Abilities": "abil
               "Type": "types"}
 
 
-def basic_info(data: str):
-    if "detail" in data:
-        return -1
-
+def basic_info(data: dict):
     info_list = []
     info_list.append(("Name", data["name"]))
     info_list.append(("ID", data["id"]))
@@ -57,22 +55,16 @@ def format_stats(stats_data: dict):
     return stats_list
 
 
-if __name__ == "__main__":
-    pokemon_id = input("Enter a Pokemon name or ID: ").lower()
-
+def new_lookup(u_input):
+    pokemon_id = u_input
     info = requests.get("/".join([DATABASE_URL, "pokemon", pokemon_id]))
-    data = json.loads(info.text)
+    poke_data = json.loads(info.text)
+    if "detail" in poke_data:
+        print("Error. Please try again.")
+        return
 
-    basic_data = basic_info(data)
-
-    if basic_data == -1:
-        print("Error. Try again.")
-        quit()
-    
-    base_stats = format_stats(get_base_stats(data))
-    basic_info = basic_data + base_stats
-
-    for info in basic_info:
+    complete_info = basic_info(poke_data) + format_stats(get_base_stats(poke_data))
+    for info in complete_info:
         if info[0] == "Type" and len(info[0]) == 2:
             print("{0}: {1} / {2}".format(info[0], info[1].capitalize(), 
             info[2].capitalize()))
@@ -86,3 +78,14 @@ if __name__ == "__main__":
 
         else:
             print("{0}: {1}".format(info[0], info[1]))
+
+if __name__ == "__main__":
+	print("Made by Yuki")
+	print("Version 1.0.2")
+    command = input("Search for Name or ID of Pokemon ('Q' to quit): ").lower()
+    print("------------------\n")
+    while command != 'Q':
+        new_lookup(command)
+        print("------------------\n")
+        command = input("Search for Name or ID of Pokemon ('Q' to quit): ").lower()
+        print("------------------\n")
