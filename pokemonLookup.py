@@ -56,7 +56,7 @@ def format_stats(stats_data: dict):
     return stats_list
 
 
-def new_lookup(u_input):
+def poke_lookup(u_input):
     pokemon_id = u_input
     info = requests.get("/".join([DATABASE_URL, "pokemon", pokemon_id]))
     poke_data = json.loads(info.text)
@@ -81,14 +81,60 @@ def new_lookup(u_input):
             print("{0}: {1}".format(info[0], info[1]))
 
 
+def abil_lookup(u_input):
+    pokemon_abil = u_input
+    info = requests.get("/".join([DATABASE_URL, "ability", pokemon_abil]))
+    abil_data = json.loads(info.text)
+    if "detail" in abil_data:
+        print("Error. Please try again.")
+        return
+
+    for info in ability_info(abil_data):
+        if info[0] == "Pokemon":
+            print("\nPokemon(s) that can have this ability:")
+            print(", ".join([poke.capitalize() for poke in info[1:]]))
+        
+        elif type(info[1]) == str:
+            print("{0}: {1}".format(info[0], info[1].capitalize()))
+
+        else:
+            print("{0}: {1}".format(info[0], info[1]))
+
+
+def ability_info(data: dict):
+    ability_list = []
+    ability_list.append(("Name", data["name"]))
+    ability_list.append(("Generation", data["generation"]["name"]))
+    ability_list.append(("Effect", data["effect_entries"][0]["short_effect"]))
+
+    all_poke = ["Pokemon"]
+    for poke in data["pokemon"]:
+        all_poke.append(poke["pokemon"]["name"])
+    ability_list.append(all_poke)
+
+    return ability_list
+
+
 if __name__ == "__main__":
 
     print("Made by Yuki")
     print("Version 1.0.2")
-    command = input("Search for Name or ID of Pokemon ('Q' to quit): ").lower()
-    print("------------------\n")
-    while command != 'q':
-        new_lookup(command)
+    print("PokeTools")
+    choice = input("Enter 'A' for ability or 'P' for pokemon lookup: ").lower()
+    if choice == "a":
+        command = input("Search for Name or ID of Ability ('Q' to quit): ").lower()
         print("------------------\n")
+        while command != 'q':
+            abil_lookup(command)
+            print("------------------\n")
+            command = input("Search for Name or ID of Ability ('Q' to quit): ").lower()
+            print("------------------\n")
+
+    elif choice == "p":
         command = input("Search for Name or ID of Pokemon ('Q' to quit): ").lower()
         print("------------------\n")
+        while command != 'q':
+            poke_lookup(command)
+            print("------------------\n")
+            command = input("Search for Name or ID of Pokemon ('Q' to quit): ").lower()
+            print("------------------\n")
