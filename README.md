@@ -1,5 +1,5 @@
 # PokeTools
-Version 1.0
+Version 1.0.2
 
 Date: April 13th, 2018
 
