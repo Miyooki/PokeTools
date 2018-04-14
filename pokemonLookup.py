@@ -5,12 +5,12 @@
 
 import json
 import requests
-import sys
+
 
 DATABASE_URL = "http://pokeapi.co/api/v2"
 STATS_FORMAT = {"hp": "HP", "attack": "Attack", "special-attack": "Sp. Attack",
                 "defense": "Defense", "special-defense": "Sp. Defense", "speed": "Speed"}
-BASIC_INFO = {"Name": "name", "ID": "id", "Weight": "weight", "Abilities": "abilities",
+BASIC_INFO = {"Name": "name", "ID": "id", "Weight": "weight", "Height": "height", "Abilities": "abilities",
               "Type": "types"}
 
 
@@ -19,6 +19,7 @@ def basic_info(data: dict):
     info_list.append(("Name", data["name"]))
     info_list.append(("ID", data["id"]))
     info_list.append(("Weight", str(data["weight"] / 10) + "kg"))
+    info_list.append(("Height", str(data["height"] / 10) + "m"))
     
     all_abilities = ["Abilities"]
     for index in range(len(data["abilities"])):
@@ -65,7 +66,7 @@ def new_lookup(u_input):
 
     complete_info = basic_info(poke_data) + format_stats(get_base_stats(poke_data))
     for info in complete_info:
-        if info[0] == "Type" and len(info[0]) == 2:
+        if info[0] == "Type" and len(info) == 3:
             print("{0}: {1} / {2}".format(info[0], info[1].capitalize(), 
             info[2].capitalize()))
         
@@ -79,12 +80,14 @@ def new_lookup(u_input):
         else:
             print("{0}: {1}".format(info[0], info[1]))
 
+
 if __name__ == "__main__":
+
     print("Made by Yuki")
     print("Version 1.0.2")
     command = input("Search for Name or ID of Pokemon ('Q' to quit): ").lower()
     print("------------------\n")
-    while command != 'Q':
+    while command != 'q':
         new_lookup(command)
         print("------------------\n")
         command = input("Search for Name or ID of Pokemon ('Q' to quit): ").lower()
