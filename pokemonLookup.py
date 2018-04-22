@@ -1,6 +1,6 @@
 # Author: Yuki
 # Date: April 13th, 2018
-# Version: v1.0
+# Version: v1.0.3
 # Pokemon lookup tool that uses PokeAPI.
 
 import json
@@ -119,7 +119,7 @@ if __name__ == "__main__":
 
     print("Made by Yuki")
     print("Version 1.0.2")
-    print("PokeTools")
+    print("PokeTools\n")
     choice = input("Enter 'A' for ability or 'P' for pokemon lookup: ").lower()
     if choice == "a":
         command = input("Search for Name or ID of Ability ('Q' to quit): ").lower()
